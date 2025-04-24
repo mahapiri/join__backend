@@ -1,0 +1,52 @@
+{% extends "join/base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static "tasks_app/css/styles.css" %} %}">
+{% block title %}
+  <title>Task Detail List View</title>
+{% endblock %}
+{% block content %}
+<h2 class="red">Task: {{ task.title }}</h2>
+<table>
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Category</th>
+            <th>Prio</th>
+            <th>Subtasks</th>
+            <th>Assignments</th>
+        </tr>
+        <tr>
+            <td>{{ task.id }}</td>
+            <td>{{ task.title }}</td>
+            <td>{{ task.description }}</td>
+            <td>{{ task.due_date|date:'d/m/Y' }}</td>
+            <td>{{ task.status }}</td>
+            <td>{{ task.category }}</td>
+            <td>{{ task.prio }}</td>
+            <td>
+                {% for subtask in task.subtasks.all %}
+                    <div>{{ subtask.subtask }}</div>
+                {% endfor %}
+            </td>
+            <td>
+                {% for contact in task.assigned_contacts.all %}
+                    <div>{{ contact.name }}</div>
+                {% endfor %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<br>
+<a href="{% url "tasks:subtask_create" task.pk %}">Create new Subtask</a>
+<br>
+<a href="{% url "tasks:task_update" task.pk %}">Change current task</a>
+<br>
+<br>
+<a href="{% url "tasks:all" %}">Back to all tasks</a>
+{% endblock content %}
+

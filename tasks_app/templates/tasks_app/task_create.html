@@ -1,0 +1,20 @@
+{% extends 'join/base.html' %}
+{% load static %}
+{% block css %}
+  <link rel="stylesheet" href="{% static 'tasks_app/css/styles.css' %}" />
+{% endblock %}
+{% block title %}
+  <title>Task Create View</title>
+{% endblock %}
+{% block content %}
+  <h2 class="red">Create new task</h2>
+  <a href="{% url 'tasks:category_create' %}">Add new category</a>
+  <br />
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+  </form>
+  <br />
+  <a href="{% url 'tasks:all' %}">Back to all tasks</a>
+{% endblock %}

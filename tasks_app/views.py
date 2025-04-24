@@ -1,17 +1,76 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
-from django.views import View
-from django.views.generic import ListView
-
-from contacts_app.models import Contact
-from tasks_app.models import Subtask, Task
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from tasks_app.models import Category, Subtask, Task
 
 # Create your views here.
-class TaskListView(LoginRequiredMixin, View):
+class TaskListView(LoginRequiredMixin, ListView):
+    model = Task
+    context_object_name = 'tasks'
+    template_name = 'tasks_app/task_list.html'
     login_url = '/accounts/login/'
 
-    def get(self, request):
-        tasks = Task.objects.all()
-        subtasks = Subtask.objects.all()
-        ctx = {'tasks': tasks, 'subtasks': subtasks}
-        return render(request, 'tasks_app/task_list.html', ctx)
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['subtasks'] = Subtask.objects.all()
+    #     return context
+    
+
+class TaskDetailView(LoginRequiredMixin, DetailView):
+    model = Task
+    context_object_name = 'task'
+    template_name ='tasks_app/task_detail_list.html'
+    login_url = '/accounts/login/'
+    # queryset = Task.objects.prefetch_related('subtasks')
+
+
+class TaskCreateView(LoginRequiredMixin, CreateView):
+    model = Task
+    template_name = 'tasks_app/task_create.html'
+    login_url = '/accounts/login/'
+    fields = ['title', 'description', 'due_date', 'prio', 'status', 'assigned_contacts', 'category']
+    success_url = 'tasks_app/subtask_create.html'
+
+    def get_success_url(self):
+        return reverse('tasks:subtask_create', kwargs={'pk': self.object.pk})
+
+
+class SubtaskCreateView(LoginRequiredMixin, CreateView):
+    model = Subtask
+    template_name = 'tasks_app/subtask_create.html'
+    login_url = '/accounts/login/'
+    fields = ['subtask', 'is_completed']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pk'] = self.kwargs.get('pk')
+        return context
+
+    def form_valid(self, form):
+        task_id = self.kwargs.get('pk')
+        task = get_object_or_404(Task, pk=task_id)
+        form.instance.task = task
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('tasks:detail', kwargs={'pk': self.kwargs.get('pk')})
+    
+
+class CategoryCreateView(LoginRequiredMixin, CreateView):
+    model = Category
+    template_name = 'tasks_app/category_create.html'
+    login_url = '/accounts/login/'
+    fields = ['name', 'color']
+
+    def get_success_url(self):
+        return reverse('tasks:create')
+    
+
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
+    model = Task
+    template_name = 'tasks_app/task_update.html'
+    fields = ['title', 'description', 'due_date', 'prio', 'status', 'assigned_contacts', 'category']
+
+    def get_success_url(self):
+        return reverse('tasks:detail', kwargs={'pk': self.object.pk })

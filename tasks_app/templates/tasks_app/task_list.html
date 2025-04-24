@@ -23,7 +23,7 @@
       </tr>
       {% for task in tasks %}
         <tr>
-          <td>{{ task.id }}</td>
+          <td><a href="{% url "tasks:detail" task.id %}">{{ task.id }}</a></td>
           <td>{{ task.title }}</td>
           <td>{{ task.description }}</td>
           <td>{{ task.due_date|date:'d/m/Y' }}</td>
@@ -31,8 +31,7 @@
           <td>{{ task.category }}</td>
           <td>{{ task.prio }}</td>
           <td>
-            {% for subtask in subtasks %}
-              {% if task.id == subtask.task_id %}
+            {% for subtask in task.subtasks.all %}
                 <div>{{ subtask.subtask }}
                     {% if subtask.is_completed == True %}
                         (Erledigt)
@@ -40,7 +39,6 @@
                         (Ausstehend)
                     {% endif %}
                 </div>
-              {% endif %}
             {% endfor %}
           </td>
           <td>
@@ -52,4 +50,6 @@
       {% endfor %}
     </tbody>
   </table>
+  <br>
+  <a href="{% url "tasks:create" %}">Add new task</a>
 {% endblock %}

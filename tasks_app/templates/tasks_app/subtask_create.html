@@ -1,0 +1,17 @@
+{% extends 'join/base.html' %}
+{% load static %}
+{% block css %}
+  <link rel="stylesheet" href="{% static 'tasks_app/css/styles.css' %}" />
+{% endblock %}
+{% block title %}
+  <title>Subtask Create View</title>
+{% endblock %}
+{% block content %}
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
+    <br>
+    <a href="{% url "tasks:detail" pk %}">Back to task</a>
+{% endblock %}
