@@ -12,4 +12,6 @@
         {{ form.as_p }}
         <input type="submit" value="Update">
     </form>
+    <br>
+    <a href="{% url "tasks:detail" form.instance.pk %}">Back to current task</a>
 {% endblock content %}
