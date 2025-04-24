@@ -1,7 +1,5 @@
-from django.contrib.auth.models import User
 from contacts_app.models import Contact
 from tasks_app.models import Task, Subtask, Category
-
 from django.contrib.auth.models import User
 
 u1 = User(username="isabelle@gmail.com", email="isabelle@gmail.com", first_name="Isabelle", last_name="Schneider")
@@ -50,16 +48,20 @@ t1 = Task(title="1. Aufgabe", description="Beschreibung der ersten Aufgabe", due
 t1.assigned_contacts.add(c1)
 t1.save()
 
-t2 = Task(title="2. Aufgabe", description="Beschreibung der zweiten Aufgabe", due_date="2025-03-15", status="in_progress", assigned_contacts=c2, category=k2)
+t2 = Task(title="2. Aufgabe", description="Beschreibung der zweiten Aufgabe", due_date="2025-03-15", status="in_progress", category=k2)
+t2.assigned_contacts.add(c2)
 t2.save()
 
-t3 = Task(title="3. Aufgabe", description="Beschreibung der dritten Aufgabe", due_date="2025-03-18", prio="low", status="await_feedback", assigned_contacts=c3, category=k3)
+t3 = Task(title="3. Aufgabe", description="Beschreibung der dritten Aufgabe", due_date="2025-03-18", prio="low", status="await_feedback", category=k3)
+t3.assigned_contacts.add(c3)
 t3.save()
 
-t4 = Task(title="4. Aufgabe", description="Beschreibung der vierten Aufgabe", due_date="2025-03-20", prio="medium", assigned_contacts=c4, category=k4)
+t4 = Task(title="4. Aufgabe", description="Beschreibung der vierten Aufgabe", due_date="2025-03-20", prio="medium", category=k4)
+t4.assigned_contacts.add(c4)
 t4.save()
 
-t5 = Task(title="5. Aufgabe", description="Beschreibung der fünften Aufgabe", due_date="2025-03-22", prio="urgent", status="in_progress", assigned_contacts=c5, category=k5)
+t5 = Task(title="5. Aufgabe", description="Beschreibung der fünften Aufgabe", due_date="2025-03-22", prio="urgent", status="in_progress", category=k5)
+t5.assigned_contacts.add(c5)
 t5.save()
 
 s1 = Subtask(task=t1, subtask="Erste Subtask", is_completed=True)

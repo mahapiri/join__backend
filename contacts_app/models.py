@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.db import models
+from django.db import IntegrityError, models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -34,17 +34,27 @@ class Contact(models.Model):
             self.color = "--yellow"
 
     def save(self, *args, **kwargs):
-        if self.linked_user:
-            self.set_fields()
-        self.initial = self.get_initial()
-        super().save(*args, **kwargs)
+        try:
+
+            if self.linked_user:
+                self.set_fields()
+            else: 
+                self.color = "red"
+            self.initial = self.get_initial()
+            super().save(*args, **kwargs)
+        except IntegrityError:
+            print("gibt es bereits")
+        except Exception as e:
+            raise
 
 
 @receiver(post_save, sender=User)
 def create_contact_for_new_user(sender, instance, created, **kwargs):
-    if created and not Contact.objects.filter(linked_user=instance).exists():
-        Contact.objects.create(
-            linked_user=instance,
-            name=instance.get_full_name(),
-            email = instance.email
+    if created and not instance.is_superuser:
+        contact, created = Contact.objects.update_or_create(
+                linked_user=instance,
+                defaults={
+                    "name": instance.get_full_name(),
+                    "email": instance.email
+                }
         )

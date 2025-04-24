@@ -1,6 +1,4 @@
-from tabnanny import verbose
 from django.db import models
-
 from contacts_app.models import Contact
 
 PRIO_CHOICES = [
@@ -9,10 +7,11 @@ PRIO_CHOICES = [
     ("urgent", "Urgent")
 ]
 
-STAUS_CHOICES = [
+STATUS_CHOICES = [
     ("to_do", "To do"),
     ("in_progress", "In progress"),
-    ("await_feedback", "Await feedback")
+    ("await_feedback", "Await feedback"),
+    ("done", "Done"),
 ]
 
 
@@ -28,8 +27,8 @@ class Task(models.Model):
     title = models.CharField(max_length=256)
     description = models.TextField(max_length=1024, blank=True)
     due_date = models.DateField()
-    prio = models.CharField(choices=PRIO_CHOICES, blank=True)
-    status = models.CharField(choices=STAUS_CHOICES, default="to_do")
+    prio = models.CharField(choices=PRIO_CHOICES, blank=True, null=True)
+    status = models.CharField(choices=STATUS_CHOICES, default="to_do")
     assigned_contacts = models.ManyToManyField(Contact, blank=True, related_name='tasks')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
@@ -40,6 +39,11 @@ class Task(models.Model):
     
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        if self.prio == "":
+            self.prio = None
+        return super().save(*args, **kwargs)
 
 
 class Subtask(models.Model):

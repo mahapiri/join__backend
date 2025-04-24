@@ -1,0 +1,32 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="{% static 'img/favicon/favicon-dark.svg' %}" type="image/svg+xml" />
+    <link rel="icon" href="{% static 'img/favicon/favicon-dark.svg' %}" type="image/svg+xml" media="(prefers-color-scheme: light)" />
+    <link rel="icon" href="{% static 'img/favicon/favicon-bright.svg' %}" type="image/svg+xml" media="(prefers-color-scheme: dark)" />
+    {% block css %}
+    {% endblock %}
+    {% block title %}
+      <title>Join Backend - Home</title>
+    {% endblock %}
+  </head>
+  <body>
+    <h1>Join Backend</h1>
+    {% if user.is_authenticated %}
+      Hello {{ user.username }}
+      <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Log out</button>
+      </form>
+    {% else %}
+      <a href="{% url 'login' %}">Log in</a>
+    {% endif %}
+    {% block content %}
+
+    {% endblock %}
+  </body>
+</html>

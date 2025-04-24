@@ -25,6 +25,10 @@ SECRET_KEY = 'django-insecure-jo2lwk_bzn&d-dk32^lynw#@0%y6!rnqdo+jh00j6_)4^o6s#k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/tasks/all/'
+LOGOUT_REDIRECT_URL = '/'
+
 ALLOWED_HOSTS = ['*']
 
 
@@ -62,7 +66,10 @@ ROOT_URLCONF = 'join.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            'join/templates/',
+            'tasks_app/templates/',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,6 +130,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "join/static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

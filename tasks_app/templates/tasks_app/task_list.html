@@ -1,0 +1,55 @@
+{% extends 'join/base.html' %}
+{% load static %}
+{% block css %}
+  <link rel="stylesheet" href="{% static 'tasks_app/css/styles.css' %}" />
+{% endblock %}
+{% block title %}
+  <title>Task List View</title>
+{% endblock %}
+{% block content %}
+  <h2 class="red">All Tasks</h2>
+  <table>
+    <tbody>
+      <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Due Date</th>
+        <th>Status</th>
+        <th>Category</th>
+        <th>Prio</th>
+        <th>Subtasks</th>
+        <th>Assignments</th>
+      </tr>
+      {% for task in tasks %}
+        <tr>
+          <td>{{ task.id }}</td>
+          <td>{{ task.title }}</td>
+          <td>{{ task.description }}</td>
+          <td>{{ task.due_date|date:'d/m/Y' }}</td>
+          <td>{{ task.status }}</td>
+          <td>{{ task.category }}</td>
+          <td>{{ task.prio }}</td>
+          <td>
+            {% for subtask in subtasks %}
+              {% if task.id == subtask.task_id %}
+                <div>{{ subtask.subtask }}
+                    {% if subtask.is_completed == True %}
+                        (Erledigt)
+                        {% elif subtask.is_completed == False %}
+                        (Ausstehend)
+                    {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </td>
+          <td>
+            {% for contact in task.assigned_contacts.all %}
+              <div>{{ contact.name }}</div>
+            {% endfor %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
