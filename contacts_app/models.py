@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError, models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from random import randrange
 
 class Contact(models.Model):
     linked_user = models.OneToOneField(User,on_delete=models.SET_NULL, null=True, blank=True)
@@ -31,7 +31,12 @@ class Contact(models.Model):
             self.name = self.linked_user.get_full_name()
             self.email = self.linked_user.email or ""
             self.phone = None
-            self.color = "--yellow"
+            self.color = self.get_random_color()
+
+    def get_random_color(self):
+        num = randrange(100000, 1000000)
+        self.color = '#' + str(num)
+        return self.color
 
     def save(self, *args, **kwargs):
         try:
@@ -39,7 +44,7 @@ class Contact(models.Model):
             if self.linked_user:
                 self.set_fields()
             else: 
-                self.color = "red"
+                self.color = self.get_random_color()
             self.initial = self.get_initial()
             super().save(*args, **kwargs)
         except IntegrityError:
