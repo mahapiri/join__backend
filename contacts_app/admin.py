@@ -6,7 +6,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from .models import Contact
 
-# Register your models here.# Custom UserCreationForm mit Pflicht für first_name und last_name
+
+# Custom user creation form to add required first and last name fields.
 class MyUserCreationForm(UserCreationForm):
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
@@ -15,7 +16,8 @@ class MyUserCreationForm(UserCreationForm):
         model = User
         fields = ("username", "first_name", "last_name", "email")
 
-# Custom UserChangeForm mit Validierung
+
+# Custom user change form with validation for first and last name fields.
 class MyUserChangeForm(UserChangeForm):
     def clean_first_name(self):
         if self.cleaned_data["first_name"].strip() == '':
@@ -27,12 +29,12 @@ class MyUserChangeForm(UserChangeForm):
             raise ValidationError("Last name is required.")
         return self.cleaned_data["last_name"]
 
-# Angepasster UserAdmin
+
+# Custom user admin to use the custom forms for user creation and modification.
 class MyUserAdmin(UserAdmin):
     form = MyUserChangeForm
     add_form = MyUserCreationForm
 
-    # Diese Felder erscheinen beim "Benutzer hinzufügen"
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
@@ -41,6 +43,7 @@ class MyUserAdmin(UserAdmin):
     )
 
 
+# Register the custom admin for the Contact model and unregister the default User admin.
 admin.site.register(Contact)
 admin.site.unregister(User)
 admin.site.register(User, MyUserAdmin)

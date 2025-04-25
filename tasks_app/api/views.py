@@ -8,35 +8,42 @@ from tasks_app.api.serializers import TaskCountSerializer, TaskCreateSerializer,
 from tasks_app.models import Task
 
 
+# View for rendering the API overview page, requiring login.
 class ApiView(TemplateView):
     template_name = 'tasks_app/api/api_view.html'
     login_url = '/accounts/login/'
 
 
+# API view to retrieve details of a specific task, requiring login.
 class TaskDetailView(LoginRequiredMixin, generics.RetrieveAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
 
+# API view to list all tasks, requiring login.
 class TaskListView(LoginRequiredMixin, generics.ListAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
 
+# API view to create a new task, requiring login.
 class TaskCreateView(LoginRequiredMixin, generics.CreateAPIView):
     serializer_class = TaskCreateSerializer
 
 
+# API view to update an existing task, requiring login.
 class TaskUpdateView(LoginRequiredMixin, generics.RetrieveUpdateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskCreateSerializer
 
 
+# API view to delete an existing task, requiring login.
 class TaskDeleteView(LoginRequiredMixin, generics.RetrieveDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskCreateSerializer
 
 
+# API view to provide a summary of task counts based on different criteria, requiring login.
 class TaskSummaryView(LoginRequiredMixin, APIView):
     def get(self, request):
         counts = {
