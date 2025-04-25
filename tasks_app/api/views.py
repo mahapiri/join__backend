@@ -15,7 +15,7 @@ class ApiView(TemplateView):
 
 
 # API view to list all tasks, requiring login.
-class TaskListView(LoginRequiredMixin, generics.ListAPIView):
+class TaskListView(generics.ListAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
@@ -32,7 +32,7 @@ class TaskCreateView(LoginRequiredMixin, generics.CreateAPIView):
 
 
 # API view to provide a summary of task counts based on different criteria, requiring login.
-class TaskSummaryView(LoginRequiredMixin, APIView):
+class TaskSummaryView(APIView):
     def get(self, request):
         counts = {
             'tasks_count': Task.objects.count(),
