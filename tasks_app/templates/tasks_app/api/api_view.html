@@ -1,0 +1,54 @@
+{% extends 'join/base.html' %}
+{% load static %}
+{% block css %}
+  <link rel="stylesheet" href="{% static 'tasks_app/css/styles.css' %}" />
+{% endblock %}
+{% block title %}
+  <title>API View</title>
+{% endblock %}
+{% block content %}
+<br>
+<br>
+<div>
+    <a href="{% url "tasks_api:all" %}">Show all tasks</a>
+</div>
+<br>
+<br>
+<div>
+    <h2>Detail View (type a id)</h2>
+    <form method="post" id="form" onsubmit="return detailView(event)">
+        {% csrf_token %}
+        <input type="number" id="detail" placeholder="Please type a id">
+        <button type="submit">Submit</button>    
+    </form>
+</div>
+
+<div>
+    <h2>Delete Task (type a id)</h2>
+    <form method="post" id="form" onsubmit="return deleteTask(event)">
+        {% csrf_token %}
+        <input type="number" id="delete" placeholder="Please type a id">
+        <button type="submit">Submit</button>    
+    </form>
+</div>
+
+
+
+<script>
+    function detailView(event) {
+        event.preventDefault();
+        let inputValue = document.getElementById('detail').value;
+        window.location.href = `/api/tasks/${inputValue}/`;
+        return false;
+    }
+
+
+    function deleteTask(event) {
+        event.preventDefault();
+        let inputValue = document.getElementById('delete').value;
+        window.location.href = `/api/tasks/delete/${inputValue}/`;
+        return false;
+    }
+
+</script>
+{% endblock content %}

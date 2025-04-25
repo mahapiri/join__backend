@@ -22,5 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include("django.contrib.auth.urls")),
     path('', homeView),
-    path('tasks/', include('tasks_app.urls'))
+    path('tasks/', include('tasks_app.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/tasks/', include('tasks_app.api.urls')),
+    path('api/contacts/', include('contacts_app.api.urls')),    
 ]

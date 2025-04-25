@@ -1,0 +1,21 @@
+{
+    "title": "sadad",
+    "description": "adsads",
+    "due_date": "2025-04-24",
+    "prio": null,
+    "status": "to_do",
+    "assigned_contacts": [
+        1
+    ],
+    "category": 1,
+    "subtasks": [
+        {
+            "subtask": "123",
+            "is_completed": false
+        },
+        {
+            "subtask": "322222222",
+            "is_completed": false
+        }
+    ]
+}

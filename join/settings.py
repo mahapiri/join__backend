@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'tasks_app',
     'contacts_app',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
