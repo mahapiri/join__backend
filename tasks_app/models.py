@@ -1,3 +1,4 @@
+from random import randrange
 from django.db import models
 from contacts_app.models import Contact
 
@@ -17,10 +18,19 @@ STATUS_CHOICES = [
 
 class Category(models.Model):
     name = models.CharField(max_length=256)
-    color = models.CharField(max_length=256)
+    color = models.CharField(max_length=256, editable=False)
 
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        self.color = self.get_random_color()
+        return super().save(*args, **kwargs)
+
+    def get_random_color(self):
+        num = randrange(100000, 1000000)
+        self.color = '#' + str(num)
+        return self.color
 
 
 class Task(models.Model):

@@ -14,8 +14,7 @@ class TaskSubtasksSerializer(serializers.ModelSerializer):
 class TaskCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        # fields = ['name']
-        fields = '__all__'
+        fields = ['name']
 
 
 class TaskContactSerializer(serializers.ModelSerializer):
@@ -44,7 +43,7 @@ class SubtaskSerializer(serializers.ModelSerializer):
 
 
 class TaskCreateSerializer(serializers.ModelSerializer):
-    subtasks = SubtaskSerializer(many=True)
+    subtasks = SubtaskSerializer(many=True, required=False)
 
     class Meta:
         model = Task
@@ -61,3 +60,13 @@ class TaskCreateSerializer(serializers.ModelSerializer):
         
         task.assigned_contacts.set(assigned_contacts_data)
         return task
+
+
+class TaskCountSerializer(serializers.Serializer):
+    tasks_count = serializers.IntegerField()
+    to_do_count = serializers.IntegerField()
+    in_progress_count = serializers.IntegerField()
+    await_feedback_count = serializers.IntegerField()
+    done_count = serializers.IntegerField()
+    urgent_count = serializers.IntegerField()
+    upcoming_deadline = serializers.DateField(allow_null=True)

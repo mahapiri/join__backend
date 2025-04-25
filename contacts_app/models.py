@@ -10,7 +10,7 @@ class Contact(models.Model):
     email = models.EmailField(max_length=256)
     phone = models.CharField(max_length=256, null=True)
     initial = models.CharField(max_length=2, editable=False)
-    color = models.CharField(max_length=128, blank=True, )
+    color = models.CharField(max_length=128, blank=True, editable=False)
 
     class Meta:
         verbose_name = "Contact"
