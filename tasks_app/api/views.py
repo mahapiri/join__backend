@@ -1,11 +1,11 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from tasks_app.api.serializers import TaskCountSerializer, TaskCreateSerializer, TaskSerializer
-from tasks_app.models import Task
+from tasks_app.api.serializers import CategorySerializer, TaskCountSerializer, TaskCreateSerializer, TaskSerializer
+from tasks_app.models import Category, Task
 
 
 # View for rendering the API overview page, requiring login.
@@ -21,13 +21,13 @@ class TaskListView(generics.ListAPIView):
 
 
 # View for retrieving, updating, or deleting a specific task, requiring login.
-class TaskDetailView(LoginRequiredMixin, generics.RetrieveUpdateDestroyAPIView):
+class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
 
 # API view to create a new task, requiring login.
-class TaskCreateView(LoginRequiredMixin, generics.CreateAPIView):
+class TaskCreateView(generics.CreateAPIView):
     serializer_class = TaskCreateSerializer
 
 
@@ -45,3 +45,8 @@ class TaskSummaryView(APIView):
         }
         counts['upcoming_deadline'] = counts['upcoming_deadline'].due_date if counts['upcoming_deadline'] else None
         return Response(TaskCountSerializer(counts).data)
+    
+
+class CategoryListView(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer

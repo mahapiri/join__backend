@@ -14,7 +14,7 @@ class TaskSubtasksSerializer(serializers.ModelSerializer):
 class TaskCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name']
+        fields = '__all__'
 
 
 # Serializer for managing contact data associated with tasks.
@@ -32,34 +32,35 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ['pk', 'title', 'description', 'due_date', 'prio',
-                  'status', 'assigned_contacts', 'category', 'subtasks']
+        fields = '__all__'
 
 
 # Serializer for Subtask model, focusing on subtask description and completion status.
 class SubtaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subtask
-        fields = ['subtask', 'is_completed']
+        fields = '__all__'
 
 
 # Serializer used to create new tasks, including optional subtasks and contacts.
 class TaskCreateSerializer(serializers.ModelSerializer):
     subtasks = SubtaskSerializer(many=True, required=False)
+    assigned_contacts = serializers.PrimaryKeyRelatedField(queryset=Contact.objects.all(), many=True, required=False)
 
     class Meta:
         model = Task
-        fields = ['title', 'description', 'due_date', 'prio',
-                  'status', 'assigned_contacts', 'category', 'subtasks']
+        fields = '__all__'
 
     def create(self, validated_data):
-        subtasks_data = validated_data.pop('subtasks')
+        subtasks_data = validated_data.pop('subtasks', [])
         assigned_contacts_data = validated_data.pop('assigned_contacts', [])
 
         task = Task.objects.create(**validated_data)
 
-        for subtask_data in subtasks_data:
-            Subtask.objects.create(task=task, **subtask_data)
+        if subtasks_data:
+            for subtask_data in subtasks_data:
+                subtask_data['task'] = task
+                Subtask.objects.create(**subtask_data)
 
         task.assigned_contacts.set(assigned_contacts_data)
         return task
@@ -74,3 +75,9 @@ class TaskCountSerializer(serializers.Serializer):
     done_count = serializers.IntegerField()
     urgent_count = serializers.IntegerField()
     upcoming_deadline = serializers.DateField(allow_null=True)
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'

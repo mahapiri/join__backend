@@ -71,7 +71,7 @@ class Task(models.Model):
 # Subtask model representing subtasks associated with a specific task
 class Subtask(models.Model):
     task = models.ForeignKey(
-        Task, on_delete=models.CASCADE, related_name="subtasks")
+        Task, on_delete=models.CASCADE, related_name="subtasks", null=True, blank=True)
     subtask = models.CharField(max_length=1024)
     is_completed = models.BooleanField(default=False)
 

@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
@@ -6,7 +6,7 @@ from tasks_app.models import Category, Subtask, Task
 
 
 # View to list all tasks with login required
-class TaskListView(LoginRequiredMixin, ListView):
+class TaskListView(ListView):
     model = Task
     context_object_name = 'tasks'
     template_name = 'tasks_app/task_list.html'
@@ -14,7 +14,7 @@ class TaskListView(LoginRequiredMixin, ListView):
 
 
 # View to display details of a specific task with login required
-class TaskDetailView(LoginRequiredMixin, DetailView):
+class TaskDetailView(DetailView):
     model = Task
     context_object_name = 'task'
     template_name = 'tasks_app/task_detail_list.html'
@@ -22,7 +22,7 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
 
 
 # View to create a new task with login required
-class TaskCreateView(LoginRequiredMixin, CreateView):
+class TaskCreateView(CreateView):
     model = Task
     template_name = 'tasks_app/task_create.html'
     login_url = '/accounts/login/'
@@ -37,7 +37,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
 
 
 # View to update an existing task with login required
-class TaskUpdateView(LoginRequiredMixin, UpdateView):
+class TaskUpdateView(UpdateView):
     model = Task
     template_name = 'tasks_app/task_update.html'
     fields = ['title', 'description', 'due_date', 'prio',
@@ -50,7 +50,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
 
 
 # View to delete a task with login required
-class TaskDeleteView(LoginRequiredMixin, DeleteView):
+class TaskDeleteView(DeleteView):
     model = Task
     context_object_name = 'task'
     success_url = reverse_lazy('tasks:all')
@@ -58,7 +58,7 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
 
 
 # View to create a new subtask for a task with login required
-class SubtaskCreateView(LoginRequiredMixin, CreateView):
+class SubtaskCreateView(CreateView):
     model = Subtask
     template_name = 'tasks_app/subtask_create.html'
     login_url = '/accounts/login/'
@@ -86,7 +86,7 @@ class SubtaskCreateView(LoginRequiredMixin, CreateView):
 
 
 # View to update an existing subtask with login required
-class SubtaskUpdateView(LoginRequiredMixin, UpdateView):
+class SubtaskUpdateView(UpdateView):
     model = Subtask
     template_name = 'tasks_app/subtask_update.html'
     fields = ['subtask', 'is_completed']
@@ -106,7 +106,7 @@ class SubtaskUpdateView(LoginRequiredMixin, UpdateView):
 
 
 # View to create a new category for tasks with login required
-class CategoryCreateView(LoginRequiredMixin, CreateView):
+class CategoryCreateView(CreateView):
     model = Category
     template_name = 'tasks_app/category_create.html'
     login_url = '/accounts/login/'

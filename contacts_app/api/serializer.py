@@ -8,4 +8,4 @@ class ContactSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Contact
-        fields = ['name', 'email', 'phone', 'initial']
+        fields = '__all__'
