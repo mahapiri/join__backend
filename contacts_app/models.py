@@ -4,6 +4,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from random import randrange
 
+from rest_framework.fields import empty
+
 
 # Contact model to store additional information related to a user.
 class Contact(models.Model):
@@ -35,7 +37,7 @@ class Contact(models.Model):
 
     def set_fields(self):
         if self.linked_user:
-            self.name = self.linked_user.get_full_name()
+            self.name = self.linked_user.get_full_name().title()
             self.email = self.linked_user.email or ""
             self.phone = None
             self.color = self.get_random_color()
@@ -55,7 +57,10 @@ class Contact(models.Model):
             if self.linked_user:
                 self.set_fields()
             else:
-                self.color = self.get_random_color()
+                if self.color is '':
+                    self.color = self.get_random_color()
+                if self.name:
+                    self.name = self.name.title()
             self.initial = self.get_initial()
             super().save(*args, **kwargs)
         except IntegrityError:
