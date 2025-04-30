@@ -4,7 +4,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from tasks_app.api.serializers import CategorySerializer, TaskCountSerializer, TaskCreateSerializer, TaskSerializer
+from tasks_app.api.serializers import CategorySerializer, TaskCountSerializer, TaskSerializer
 from tasks_app.models import Category, Task
 
 
@@ -28,7 +28,7 @@ class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 # API view to create a new task, requiring login.
 class TaskCreateView(generics.CreateAPIView):
-    serializer_class = TaskCreateSerializer
+    serializer_class = TaskSerializer
 
 
 # API view to provide a summary of task counts based on different criteria, requiring login.
