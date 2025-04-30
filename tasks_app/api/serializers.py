@@ -3,43 +3,40 @@ from contacts_app.models import Contact
 from tasks_app.models import PRIO_CHOICES, STATUS_CHOICES, Category, Subtask, Task
 
 
-# Serializer for creating and managing task-related data, including subtasks, categories, and assigned contacts.
-class TaskSubtasksSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Subtask
-        fields = '__all__'
-
-
 # Serializer for managing task category data, exposing only the name field.
-class TaskCategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ['id', 'name', 'color']
 
 
 # Serializer for managing contact data associated with tasks.
 class TaskContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
-        fields = '__all__'
-
-
-# Main serializer for Task model, including related subtasks, categories, and assigned contacts.
-class TaskSerializer(serializers.ModelSerializer):
-    subtasks = TaskSubtasksSerializer(many=True, read_only=True)
-    category = TaskCategorySerializer(many=False, read_only=True)
-    assigned_contacts = TaskContactSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Task
-        fields = '__all__'
+        fields = ['id', 'linked_user', 'name', 'email', 'phone', 'initial', 'color']
 
 
 # Serializer for Subtask model, focusing on subtask description and completion status.
 class SubtaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subtask
-        fields = '__all__'
+        fields = ['id', 'task', 'subtask', 'is_completed']
+
+
+# Main serializer for Task model, including related subtasks, categories, and assigned contacts.
+class TaskSerializer(serializers.ModelSerializer):
+    subtasks = SubtaskSerializer(many=True, read_only=True)
+    category = CategorySerializer(many=False, read_only=True)
+    assigned_contacts = TaskContactSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Task
+        fields = ['id', 'title', 'description', 'due_date', 'prio', 'status', 'assigned_contacts', 'category', 'subtasks']
+    
+    def update(self, instance, validated_data):
+        print(validated_data)
+        return instance
 
 
 # Serializer used to create new tasks, including optional subtasks and contacts.
@@ -75,9 +72,3 @@ class TaskCountSerializer(serializers.Serializer):
     done_count = serializers.IntegerField()
     urgent_count = serializers.IntegerField()
     upcoming_deadline = serializers.DateField(allow_null=True)
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
