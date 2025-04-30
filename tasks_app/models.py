@@ -47,16 +47,16 @@ class Task(models.Model):
     title = models.CharField(max_length=256)
     description = models.TextField(max_length=1024, blank=True)
     due_date = models.DateField()
-    prio = models.CharField(choices=PRIO_CHOICES, blank=True, null=True)
-    status = models.CharField(choices=STATUS_CHOICES, default="to_do")
+    prio = models.CharField(choices=PRIO_CHOICES, max_length=10, blank=True, null=True)
+    status = models.CharField(choices=STATUS_CHOICES, max_length=50, default="to_do")
     assigned_contacts = models.ManyToManyField(
-        Contact, blank=True, related_name='tasks')
+      Contact, blank=True, related_name='tasks')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = "Task"
-        verbose_name_plural = "Tasks"
-        ordering = ["due_date"]
+            verbose_name = "Task"
+            verbose_name_plural = "Tasks"
+            ordering = ["due_date"]
 
     def __str__(self):
         return self.title
