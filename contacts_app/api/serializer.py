@@ -2,10 +2,10 @@ from rest_framework import serializers
 from contacts_app.models import Contact
 
 
-# Serializer for the Contact model to handle serialization and deserialization.
+# Serializer for managing contact data associated with tasks.
 class ContactSerializer(serializers.ModelSerializer):
-    initial = serializers.CharField(read_only=True)
+    id = serializers.IntegerField(required=False)
 
     class Meta:
         model = Contact
-        fields = '__all__'
+        fields = ['id', 'linked_user', 'name', 'email', 'phone', 'initial', 'color']

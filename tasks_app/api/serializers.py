@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from contacts_app.api.serializer import ContactSerializer
 from contacts_app.models import Contact
 from tasks_app.models import PRIO_CHOICES, STATUS_CHOICES, Category, Subtask, Task
 
@@ -10,16 +11,6 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name', 'color']
-
-
-# Serializer for managing contact data associated with tasks.
-class TaskContactSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False)
-
-    class Meta:
-        model = Contact
-        fields = ['id', 'linked_user', 'name',
-                  'email', 'phone', 'initial', 'color']
 
 
 # Serializer for Subtask model, focusing on subtask description and completion status.
@@ -35,9 +26,8 @@ class SubtaskSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     subtasks = SubtaskSerializer(many=True, required=False)
-    category = CategorySerializer(many=False, read_only=True)
-    assigned_contacts = serializers.PrimaryKeyRelatedField(
-        queryset=Contact.objects.all(), many=True, required=False)
+    category = CategorySerializer(many=False, required=True)
+    assigned_contacts = ContactSerializer(many=True, required=False)
 
     class Meta:
         model = Task
@@ -47,7 +37,10 @@ class TaskSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         subtasks_data = validated_data.pop('subtasks', [])
         assigned_contacts_data = validated_data.pop('assigned_contacts', [])
+        category_data = validated_data.pop('category', None)
 
+        category_id = category_data.get('id') if category_data else None
+        validated_data['category_id'] = category_id
         task = Task.objects.create(**validated_data)
 
         if subtasks_data:
@@ -55,7 +48,9 @@ class TaskSerializer(serializers.ModelSerializer):
                 subtask_data['task'] = task
                 Subtask.objects.create(**subtask_data)
 
-        task.assigned_contacts.set(assigned_contacts_data)
+        if assigned_contacts_data:
+            contact_ids = [contact.get('id') for contact in assigned_contacts_data if contact.get('id')]
+            task.assigned_contacts.set(contact_ids)
         return task
 
     def update(self, instance, validated_data):
@@ -63,7 +58,8 @@ class TaskSerializer(serializers.ModelSerializer):
         assigned_contacts_data = validated_data.get('assigned_contacts', [])
 
         instance.title = validated_data.get('title', instance.title)
-        instance.description = validated_data.get('description', instance.description)
+        instance.description = validated_data.get(
+            'description', instance.description)
         instance.due_date = validated_data.get('due_date', instance.due_date)
         instance.prio = validated_data.get('prio', instance.prio)
         instance.status = validated_data.get('status', instance.status)
@@ -84,9 +80,9 @@ class TaskSerializer(serializers.ModelSerializer):
                         subtask=subtask_data.get('subtask', ''),
                         is_completed=subtask_data.get('is_completed', False)
                     )
-
         if assigned_contacts_data:
-            instance.assigned_contacts.set(assigned_contacts_data)
+            contact_ids = [contact.get('id') for contact in assigned_contacts_data if contact.get('id')]
+            instance.assigned_contacts.set(contact_ids)
 
         instance.save()
         return instance
