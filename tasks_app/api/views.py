@@ -43,7 +43,12 @@ class TaskSummaryView(APIView):
             'urgent_count': Task.objects.filter(prio='urgent').count(),
             'upcoming_deadline': Task.objects.filter(prio='urgent').order_by('due_date').first()
         }
-        counts['upcoming_deadline'] = counts['upcoming_deadline'].due_date if counts['upcoming_deadline'] else None
+
+        upcoming_task = Task.objects.filter(prio='urgent').exclude(status='done').order_by('due_date').first()
+        urgent_task = Task.objects.filter(prio='urgent').exclude(status='done').count()
+
+        counts['upcoming_deadline'] = upcoming_task.due_date if upcoming_task else None
+        counts['urgent_count'] = urgent_task
         return Response(TaskCountSerializer(counts).data)
 
 
