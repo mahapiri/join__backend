@@ -4,8 +4,8 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from tasks_app.api.serializers import CategorySerializer, TaskCountSerializer, TaskSerializer
-from tasks_app.models import Category, Task
+from tasks_app.api.serializers import CategorySerializer, SubtaskSerializer, TaskCountSerializer, TaskSerializer
+from tasks_app.models import Category, Subtask, Task
 
 
 # View for rendering the API overview page, requiring login.
@@ -45,7 +45,7 @@ class TaskSummaryView(APIView):
         }
         counts['upcoming_deadline'] = counts['upcoming_deadline'].due_date if counts['upcoming_deadline'] else None
         return Response(TaskCountSerializer(counts).data)
-    
+
 
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
@@ -54,3 +54,8 @@ class CategoryListView(generics.ListAPIView):
 
 class CategoryCreateView(generics.CreateAPIView):
     serializer_class = CategorySerializer
+
+
+class SubtaskDestroyView(generics.RetrieveDestroyAPIView):
+    queryset = Subtask.objects.all()
+    serializer_class = SubtaskSerializer
