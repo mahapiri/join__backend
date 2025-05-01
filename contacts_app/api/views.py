@@ -1,8 +1,10 @@
 
 
 # from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.db import IntegrityError
 from rest_framework import generics
-from contacts_app.api.serializer import ContactSerializer
+from contacts_app.api.serializer import ContactSerializer, UserSerializer
 from contacts_app.models import Contact
 
 
@@ -21,3 +23,15 @@ class ContactDetailView(generics.RetrieveUpdateDestroyAPIView):
 # View for creating a new contact, requiring login.
 class ContactCreateView(generics.CreateAPIView):
     serializer_class = ContactSerializer
+
+
+class UserCreateView(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def perform_create(self, serializer):
+        try:
+            user = serializer.save()
+            return user
+        except IntegrityError as e:
+            raise IntegrityError(f"Fehler beim Erstellen des Benutzers: {str(e)}")
