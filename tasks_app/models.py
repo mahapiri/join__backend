@@ -31,6 +31,7 @@ class Category(models.Model):
     # Override the save method to assign a random color when a category is created
 
     def save(self, *args, **kwargs):
+        self.name = self.name.title()
         self.color = self.get_random_color()
         return super().save(*args, **kwargs)
 

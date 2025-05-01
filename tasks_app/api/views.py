@@ -50,3 +50,7 @@ class TaskSummaryView(APIView):
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+
+class CategoryCreateView(generics.CreateAPIView):
+    serializer_class = CategorySerializer

@@ -57,7 +57,7 @@ class Contact(models.Model):
             if self.linked_user:
                 self.set_fields()
             else:
-                if self.color is '':
+                if self.color == '':
                     self.color = self.get_random_color()
                 if self.name:
                     self.name = self.name.title()
