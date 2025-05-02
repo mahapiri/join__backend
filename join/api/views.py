@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView
 from django.db import IntegrityError
 from rest_framework import generics
 
@@ -15,3 +16,11 @@ class UserCreateView(generics.ListCreateAPIView):
             return user
         except IntegrityError as e:
             raise IntegrityError(f"Fehler beim Erstellen des Benutzers: {str(e)}")
+
+
+class UserLoginView(LoginView):
+    
+    def form_valid(self, form):
+        print(form)
+        return super().form_valid(form)
+    
