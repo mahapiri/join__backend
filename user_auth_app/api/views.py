@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView
 from django.db import IntegrityError
 from rest_framework import generics
 
-from join.api.serializer import UserSerializer
+from user_auth_app.api.serializer import UserSerializer
 
 
 class UserCreateView(generics.ListCreateAPIView):

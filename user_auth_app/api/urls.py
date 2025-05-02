@@ -1,6 +1,6 @@
 from django.urls import path
 
-from join.api.views import UserCreateView, UserLoginView
+from user_auth_app.api.views import UserCreateView, UserLoginView
 
 
 urlpatterns = [
