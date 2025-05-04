@@ -10,3 +10,4 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         fields = ['id', 'linked_user', 'name', 'email', 'phone', 'initial', 'color']
+        read_only_fields = ['initial', 'color']

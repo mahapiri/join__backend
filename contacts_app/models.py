@@ -52,9 +52,10 @@ class Contact(models.Model):
     # Override save method to set the necessary fields and handle errors.
 
     def save(self, *args, **kwargs):
+        is_new = self.pk is None
         try:
 
-            if self.linked_user:
+            if self.linked_user and is_new:
                 self.set_fields()
             else:
                 if self.color == '':

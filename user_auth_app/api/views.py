@@ -8,6 +8,8 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from contacts_app.api.views import ContactSerializer
+from contacts_app.models import Contact
 from user_auth_app.api.serializer import UserSerializer
 
 
@@ -74,4 +76,12 @@ class CheckAuthVIew(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response({'detail': 'Authenticated'})
+        user = request.user
+        try:
+            contact = Contact.objects.get(linked_user=user)
+            serializer = ContactSerializer(contact)
+            return Response(serializer.data)
+        except Contact.DoesNotExist:
+            return Response({
+                'error': 'Contact not found'
+            }, status=404)
