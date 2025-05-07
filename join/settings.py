@@ -35,7 +35,7 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/tasks/all/'
 LOGOUT_REDIRECT_URL = '/'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://join-backend-p0l1.onrender.com']
 
 
 # Application definition
